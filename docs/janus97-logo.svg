@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" role="img" aria-labelledby="title desc">
+  <title id="title">JANUS-97</title>
+  <desc id="desc">A minimal two-sided face centered on a blue and pink split background, with the JANUS-97 wordmark below.</desc>
+  <path fill="#33b8e8" d="M0 0h450v600H0z"/>
+  <path fill="#ef5ab5" d="M450 0h450v600H450z"/>
+
+  <g fill="none" stroke="#14223a" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="421" cy="264" r="11" fill="#14223a" stroke="none"/>
+    <circle cx="479" cy="264" r="11" fill="#14223a" stroke="none"/>
+    <path d="M396 321c13 19 29 21 54 6m0 0c25 15 41 13 54-6" stroke-width="9"/>
+  </g>
+
+  <text x="450" y="438" fill="#14223a" font-family="Arial, Helvetica, sans-serif" font-size="49" font-weight="700" letter-spacing="12" text-anchor="middle">JANUS-97</text>
+  <text x="450" y="473" fill="#14223a" fill-opacity=".78" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" letter-spacing="4" text-anchor="middle">INVOICE RISK OPERATIONS</text>
+</svg>

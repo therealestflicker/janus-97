@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-black">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="JANUS-97 screens invoice batches locally with explainable risk signals and an auditable human-review queue." />
+  <link rel="icon" href="./favicon.svg" />
+  <title>JANUS-97 | Invoice Risk Operations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen text-slate-200">
+  <a href="#input" class="skip">Skip to input</a>
+
+  <header class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 pt-5">
+    <div class="flex items-center gap-3">
+      <svg viewBox="0 0 48 48" width="46" height="46" aria-hidden="true">
+        <path d="M24 3 A21 21 0 0 0 24 45 Z" fill="#00f0ff"/><path d="M24 3 A21 21 0 0 1 24 45 Z" fill="#ff2bd6"/>
+        <path d="M24 3 V45" stroke="#05060a" stroke-width="2"/>
+        <circle cx="16" cy="21" r="2.6" fill="#05060a"/><circle cx="32" cy="21" r="2.6" fill="#05060a"/>
+        <path d="M14 31 Q19 35 24 31 Q29 35 34 31" stroke="#05060a" stroke-width="2" fill="none"/>
+      </svg>
+      <div>
+        <h1 class="logo text-2xl font-extrabold tracking-[0.25em]">JANUS-97</h1>
+        <p class="text-xs text-slate-400">Invoice Risk Operations · Private by design</p>
+      </div>
+    </div>
+    <nav class="flex flex-wrap items-center gap-2" aria-label="Main actions">
+      <button id="btnDemo" class="btn btn-mag">▶ Run Guided Demo</button>
+      <button id="btnRed" class="btn btn-red">☠ Red-Team</button>
+      <label class="btn flex cursor-pointer items-center gap-2"><input id="llmToggle" type="checkbox" class="accent-cyan-400" /> LLM judge</label>
+    </nav>
+  </header>
+
+  <div id="banner" class="banner mx-auto mt-4 max-w-7xl" role="status" aria-live="polite" hidden></div>
+
+  <main class="mx-auto grid max-w-7xl gap-5 px-5 py-5 lg:grid-cols-12">
+    <section class="panel batch-panel lg:col-span-12" aria-labelledby="batch-title">
+      <div class="batch-heading">
+        <div>
+          <p class="eyebrow">JANUS · ACCOUNTS PAYABLE INTELLIGENCE</p>
+          <h2 id="batch-title" class="batch-title">Review every invoice.<br><span>Prioritize what needs attention.</span></h2>
+          <p class="batch-copy">Screen up to 10,000 invoice records locally with explainable rules. Your data stays in this browser.</p>
+        </div>
+        <div class="privacy-badge"><span></span> LOCAL SCREENING · NO UPLOAD</div>
+      </div>
+
+      <div class="batch-toolbar">
+        <label class="upload-card" for="batchFile">
+          <span class="upload-mark" aria-hidden="true">↑</span>
+          <span><strong>Import invoice CSV</strong><small>Drop a CSV here or browse files · up to 10,000 rows</small></span>
+          <input id="batchFile" type="file" accept=".csv,text/csv" />
+        </label>
+        <button id="batchDemo" class="btn btn-cy" type="button">Load hackathon demo batch</button>
+        <button id="batchTemplate" class="btn" type="button">Download CSV template</button>
+        <button id="batchExport" class="btn" type="button" disabled>Export review results</button>
+      </div>
+
+      <div id="batchStatus" class="batch-status" role="status" aria-live="polite">Ready · Import a CSV or load the demo batch to begin.</div>
+
+      <div class="batch-metrics" aria-label="Batch screening summary">
+        <article class="metric"><span>Invoices screened</span><strong id="batchTotal">—</strong><small>Current batch</small></article>
+        <article class="metric metric-priority"><span>Priority review</span><strong id="batchPriority">—</strong><small>Heuristic score ≥ 50 points</small></article>
+        <article class="metric metric-review"><span>Review recommended</span><strong id="batchReview">—</strong><small>Heuristic score 25–49 points</small></article>
+        <article class="metric"><span>Low signal</span><strong id="batchLow">—</strong><small>No configured rule matched</small></article>
+      </div>
+
+      <div class="results-heading">
+        <div><h3>Screening queue</h3><p>Signals support review; they are not a fraud probability or payment decision.</p></div>
+        <div class="results-controls">
+          <input id="batchSearch" class="batch-search" type="search" placeholder="Search invoice or vendor" aria-label="Search invoice results" />
+          <select id="batchFilter" class="batch-filter" aria-label="Filter invoice results">
+            <option value="ALL">All results</option><option value="PRIORITY">Priority review</option><option value="REVIEW">Review recommended</option><option value="LOW SIGNAL">Low signal</option>
+          </select>
+        </div>
+      </div>
+      <div id="batchEmpty" class="batch-empty">Your screened invoices will appear here.</div>
+      <div class="table-wrap">
+        <table class="tbl batch-table">
+          <thead><tr><th>Invoice</th><th>Vendor</th><th>Risk score</th><th>Queue</th><th>Detected signals</th><th>Inspect</th></tr></thead>
+          <tbody id="batchBody"></tbody>
+        </table>
+      </div>
+      <p id="batchTruncated" class="batch-footnote" hidden></p>
+    </section>
+
+    <!-- LEFT: input -->
+    <section class="panel lg:col-span-5" aria-labelledby="h-input">
+      <h2 id="h-input" class="ph"><span class="dot cy"></span> Input — paste any invoice, email or document</h2>
+      <textarea id="input" class="area" rows="14" spellcheck="false" placeholder="Paste untrusted document text here, or load a sample below…"></textarea>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button id="btnScan" class="btn btn-cy">Scan</button>
+        <button id="btnFull" class="btn btn-mag">Run full analysis</button>
+        <button id="btnClear" class="btn">Clear</button>
+        <span class="self-center text-xs text-slate-500">Ctrl + Enter = full analysis</span>
+      </div>
+      <h3 class="ph mt-5">Sample documents</h3>
+      <div id="samples" class="mt-2 grid gap-2 sm:grid-cols-2"></div>
+      <div id="llmPanel" class="mt-4 rounded-lg border border-cyan-400/30 p-3" hidden>
+        <p class="text-xs text-cyan-300">LLM judge — a real model reads the document and judges it semantically (catches paraphrases &amp; other languages).</p>
+        <label for="llmKey" class="mt-2 block text-xs text-slate-400">API key — just paste it (Gemini AIza…, Claude sk-ant-…, or OpenAI sk-…). Provider and model are auto-detected. Kept in memory only, never stored.</label>
+        <input id="llmKey" type="password" autocomplete="off" class="area w-full" placeholder="paste key…" />
+        <p class="mt-2 text-xs text-amber-300">The document text is sent to the chosen provider. The local Action Gate still makes the final decision; the LLM can only raise risk or add proposed actions.</p>
+      </div>
+    </section>
+
+    <!-- RIGHT: meter + findings + gate -->
+    <div class="flex flex-col gap-5 lg:col-span-7">
+      <section class="panel" aria-labelledby="h-meter">
+        <h2 id="h-meter" class="ph"><span class="dot cy"></span> Face 1 · Scanner — live risk</h2>
+        <div class="mt-3 flex items-end gap-5">
+          <div><div id="meterNum" class="meter-num">0</div><div class="text-[10px] text-slate-500">RISK POINTS</div><div id="meterLabel" class="text-xs font-bold tracking-widest text-slate-400" aria-live="polite">LOW</div></div>
+          <div class="flex-1"><div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Heuristic risk points, not a fraud probability" id="meterWrap"><div id="meterBar" class="meter-bar"></div></div>
+            <div class="mt-1 flex justify-between text-[10px] text-slate-500"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div></div>
+        </div>
+        <h3 class="ph mt-4">Highlighted document</h3>
+        <pre id="highlight" class="hlbox" aria-label="Document with dangerous spans highlighted"></pre>
+        <h3 class="ph mt-4">Findings</h3>
+        <ul id="findings" class="mt-2 grid gap-1.5"></ul>
+        <div id="llmOut" class="mt-3 rounded-lg border border-cyan-400/30 p-2 text-sm text-cyan-200" hidden></div>
+      </section>
+
+      <section class="panel" aria-labelledby="h-gate">
+        <h2 id="h-gate" class="ph"><span class="dot mg"></span> Face 2 · Action Gate — deterministic</h2>
+        <p class="mt-1 text-xs text-slate-500">Rules G1–G5 never look at “how clean” the scanner thinks the text is. Bank changes from documents are always blocked.</p>
+        <div id="gate" class="mt-3 grid gap-2" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <!-- Red team -->
+    <section id="redteamPanel" class="panel lg:col-span-12" aria-labelledby="h-red" hidden>
+      <h2 id="h-red" class="ph"><span class="dot rd"></span> Red-Team — bypasses that fool normal firewalls</h2>
+      <p class="mt-1 text-xs text-slate-500">“Gate (scanner blinded)” forces the scanner score to 0 to simulate a total miss — the Action Gate still decides.</p>
+      <div class="mt-3 overflow-x-auto">
+        <table class="tbl"><thead><tr><th>Attack</th><th>Typical keyword firewall</th><th>Face 1 · Scanner</th><th>Face 2 · Gate (scanner blinded)</th><th></th></tr></thead>
+        <tbody id="redBody"></tbody></table>
+      </div>
+    </section>
+
+    <!-- Audit -->
+    <section id="auditPanel" class="panel lg:col-span-12" aria-labelledby="h-audit">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h2 id="h-audit" class="ph"><span class="dot cy"></span> Audit log</h2>
+        <div class="flex gap-2"><button id="btnCsv" class="btn btn-cy">⬇ Export CSV</button><button id="btnLogClear" class="btn">Clear log</button></div>
+      </div>
+      <div class="mt-3 max-h-80 overflow-auto">
+        <table class="tbl"><thead><tr><th>Time (UTC)</th><th>Event</th><th>Score</th><th>Verdict</th><th>Rule</th><th>Detail</th></tr></thead>
+        <tbody id="auditBody"></tbody></table>
+        <p id="auditEmpty" class="p-3 text-sm text-slate-500">No events yet — scan something.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Guided demo overlay -->
+  <div id="demoBar" class="demo" role="dialog" aria-label="Guided demo" hidden>
+    <div class="flex items-start gap-4">
+      <div class="flex-1"><div class="text-[11px] font-bold tracking-widest text-fuchsia-300">GUIDED DEMO · <span id="demoStep">1/8</span></div>
+        <p id="demoCaption" class="mt-1 text-base text-white"></p></div>
+      <div class="flex shrink-0 gap-2"><button id="demoPause" class="btn">⏸ Pause</button><button id="demoNext" class="btn btn-cy">Next ▶</button><button id="demoExit" class="btn">✕ Exit</button></div>
+    </div>
+  </div>
+
+  <footer class="mx-auto max-w-7xl px-5 pb-24 pt-2 text-center text-xs text-slate-500">
+    Made with Devpost Learn Skill Pack · MIT License · 100% client-side — nothing leaves your browser unless you enable the LLM judge.
+  </footer>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

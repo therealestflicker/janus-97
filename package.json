@@ -1,0 +1,17 @@
+{
+  "name": "janus97",
+  "version": "1.0.0",
+  "description": "JANUS-97 — The Two-Faced Firewall for Autonomous AI Agents",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node tests/run.mjs"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}
