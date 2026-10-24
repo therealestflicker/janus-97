@@ -55,6 +55,7 @@ input.area{margin-top:4px}
 .banner{border:1px solid var(--warn);background:rgba(245,158,11,.1);color:#fde68a;border-radius:10px;padding:10px 14px;font-size:13px}
 .banner.err{border-color:var(--bad);background:rgba(255,51,85,.1);color:#fecdd3}
 .banner.info{border-color:var(--cy);background:rgba(0,240,255,.08);color:#b6fbff}
+.llm-note{margin:10px 0 0;padding:8px 10px;border:1px solid rgba(245,158,11,.28);border-radius:8px;background:rgba(245,158,11,.07);color:#fde68a;font-size:12px;line-height:1.5}
 .demo{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;width:min(960px,calc(100% - 24px));z-index:50;background:rgba(5,6,10,.96);border:1px solid var(--mg);border-radius:14px;padding:14px 16px;box-shadow:0 0 40px rgba(255,43,214,.3)}
 .flash{animation:flash .8s}@keyframes flash{from{box-shadow:0 0 0 3px var(--mg)}}
 

@@ -97,6 +97,7 @@
       <div id="samples" class="mt-2 grid gap-2 sm:grid-cols-2"></div>
       <div id="llmPanel" class="mt-4 rounded-lg border border-cyan-400/30 p-3" hidden>
         <p class="text-xs text-cyan-300">LLM judge — a real model reads the document and judges it semantically (catches paraphrases &amp; other languages).</p>
+        <p class="llm-note" role="note">Experimental. Quality varies by model. Offline screening and the Action Gate work with or without it.</p>
         <label for="llmKey" class="mt-2 block text-xs text-slate-400">API key — just paste it (Gemini AIza…, Claude sk-ant-…, or OpenAI sk-…). Provider and model are auto-detected. Kept in memory only, never stored.</label>
         <input id="llmKey" type="password" autocomplete="off" class="area w-full" placeholder="paste key…" />
         <p class="mt-2 text-xs text-amber-300">The document text is sent to the chosen provider. The local Action Gate still makes the final decision; the LLM can only raise risk or add proposed actions.</p>
